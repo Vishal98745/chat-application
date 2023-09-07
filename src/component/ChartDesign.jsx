@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import 'font-awesome/css/font-awesome.min.css';
@@ -11,10 +11,11 @@ const ChartDesign = () => {
     const [message, setMessage] = useState('');
     // const [messages, setMessages] = useState([]);
     const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-    const [users] = useState(['durgesh singh', 'ramesh', 'sohan','rohan','suresh'])
+    const [users] = useState(['durgesh singh', 'ramesh', 'sohan', 'rohan', 'suresh'])
     const [selectedUser, setSelectedUser] = useState(null);
     const [yourMessages, setYourMessages] = useState([]);
     const [rajeshMessages, setRajeshMessages] = useState([]);
+    const [final, setFinal] = useState([]);
 
     const handleEmojiButtonClick = () => {
         setShowEmojiPicker(!showEmojiPicker);
@@ -57,22 +58,22 @@ const ChartDesign = () => {
             message: "what type of work you have please tell I will do that ."
         },
         {
-            key:"thankyou👍",
-            message:"you are welcome 😀"
+            key: "thankyou",
+            message: "you are welcome 😀"
         }
     ];
 
     const removeHtmlTags = (input) => {
         return input.replace(/<[^>]*>?/gm, ''); // Remove HTML tags using regex
-      };
-      
-      const getRandomRajeshResponse = (userMessage) => {
+    };
+
+    const getRandomRajeshResponse = (userMessage) => {
         const cleanedUserMessage = removeHtmlTags(userMessage).toLowerCase();
         const response = rajeshResponses.find((item) => item.key === cleanedUserMessage);
-        
+
         return response ? response.message : "I have not understand your question ..";
-      };
-      
+    };
+
     const handleSendMessage = () => {
         if (message) {
             const userMessage = message.trim().toLowerCase();
@@ -82,10 +83,11 @@ const ChartDesign = () => {
                 sender: 'You',
             };
             setYourMessages([...yourMessages, newMessage]);
+            setFinal((prevFinal) => [...prevFinal, newMessage]);
             setMessage('');
 
             setTimeout(() => {
-                
+
                 const rajeshMessage = getRandomRajeshResponse(userMessage);
                 if (rajeshMessage) {
                     const newRajeshMessage = {
@@ -93,12 +95,14 @@ const ChartDesign = () => {
                         text: rajeshMessage,
                     };
                     setRajeshMessages([...rajeshMessages, newRajeshMessage]);
-                    
+                    setFinal((prevFinal) => [...prevFinal, newRajeshMessage]);
                 }
-            }, 2000); 
+            }, 2000);
         }
     };
-    
+
+    useEffect(() => {
+    }, [final]); // Add final as a dependency
     return (
         <main className="content">
             <div className="container p-0">
@@ -139,11 +143,11 @@ const ChartDesign = () => {
                                     </div>
                                     <div className="flex-grow-1 pl-3">
                                         {selectedUser ? (
-                                            <strong className='text-capitalize'>{selectedUser}</strong> 
+                                            <strong className='text-capitalize'>{selectedUser}</strong>
                                         ) : (
-                                            <strong className='text-capitalize'>Rajesh</strong> 
+                                            <strong className='text-capitalize'>Rajesh</strong>
                                         )}
-                                        
+
                                     </div>
                                     <div>
                                         <button className="btn btn-primary btn-lg" style={{ marginRight: '5px' }}><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="feather feather-phone feather-lg"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg></button>
@@ -155,58 +159,24 @@ const ChartDesign = () => {
 
                             <div className="position-relative">
                                 <div className="chat-messages p-4">
-                                    <div className="chat-message-right pb-4">
-                                        <div>
-                                            <img src="https://bootdey.com/img/Content/avatar/avatar1.png" className="rounded-circle mr-1" alt="Chris Wood" width="40" height="40" />
-                                            <div className="text-muted small text-nowrap mt-2">2:33 am</div>
-                                        </div>
-                                        <div className="flex-shrink-1 bg-light rounded py-2 px-3 mr-3">
-                                            <div className="font-weight-bold mb-1">You</div>
-
-                                            <div className="message-list">
-                                                hello friends
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div className="chat-message-left pb-4">
-                                        <div>
-                                            <img src="https://bootdey.com/img/Content/avatar/avatar3.png" className="rounded-circle mr-1" alt="Sharon Lessman" width="40" height="40" />
-                                            <div className="text-muted small text-nowrap mt-2">2:34 am</div>
-                                        </div>
-                                        <div className="flex-shrink-1 bg-light rounded py-2 px-3 ml-3 text-capitalize">
-                                            {selectedUser ? (<div className="font-weight-bold mb-1">{selectedUser}</div>)
-                                                : (<div className="font-weight-bold mb-1">Rajesh</div>)}
-                                            I am good friend 
-                                        </div>
-                                    </div>
-
-                                    {yourMessages.map((msg) => (
+                                    {final.map((msg) => (
                                         <div key={msg.id}
                                             className={msg.sender === 'You' ? 'chat-message-right mb-4' : 'chat-message-left pb-4'}>
                                             <div>
-                                                <img src="https://bootdey.com/img/Content/avatar/avatar1.png" className="rounded-circle mr-1" alt="Chris Wood" width="40" height="40" />
+                                                <img src={
+                                                        msg.sender === 'You'
+                                                            ? 'https://bootdey.com/img/Content/avatar/avatar1.png'
+                                                            : 'https://bootdey.com/img/Content/avatar/avatar3.png'
+                                                    } className="rounded-circle mr-1" alt="Chris Wood" width="40" height="40"/>
                                                 <div className="text-muted small text-nowrap mt-2">2:35 am</div>
                                             </div>
                                             <div className="flex-shrink-1 bg-light rounded py-2 px-3 mr-3">
-                                                <div className="font-weight-bold mb-1">You</div>
+                                                <div className="font-weight-bold mb-1 text-capitalize">
+                                                  {msg.sender==="You"?(<div>You</div>):(<div> {selectedUser ? selectedUser: "Rajesh" }</div> )} 
+                                                </div>
                                                 <div key={msg.id} className="message">
                                                     {ReactHtmlParser(msg.text)}
                                                 </div>
-                                            </div>
-                                        </div>
-                                    ))}
-                                    {rajeshMessages.map((msg) => (
-                                        <div key={msg.id}
-                                            className={msg.sender === 'You' ? 'chat-message-right mb-4' : 'chat-message-left pb-4'}>
-                                            <div>
-                                                <img src="https://bootdey.com/img/Content/avatar/avatar3.png" className="rounded-circle mr-1" alt="Chris Wood" width="40" height="40" />
-                                                <div className="text-muted small text-nowrap mt-2">2:35 am</div>
-                                            </div>
-                                            <div className="flex-shrink-1 bg-light rounded py-2 px-3 mr-3">
-                                            <div className="font-weight-bold mb-1 text-capitalize">{selectedUser ? selectedUser: "Rajesh" }</div>
-                                                    <div className="message">{msg.text}</div>
-
                                             </div>
                                         </div>
                                     ))}
@@ -222,9 +192,9 @@ const ChartDesign = () => {
                                         toolbar: [
                                             ['bold', 'italic', 'strike'],
                                             ['link'],
-                                            [{ list: 'bullet' }, { list: 'ordered' }], 
-                                            ['blockquote'], 
-                                            ['code'], 
+                                            [{ list: 'bullet' }, { list: 'ordered' }],
+                                            ['blockquote'],
+                                            ['code'],
                                         ],
                                     }}
                                 />
