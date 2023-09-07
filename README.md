@@ -6,7 +6,7 @@ Available Scripts
 In the project directory, you can run:
 please install all dependencies by after you have clone the github repo
 ## **npm install **
-
+to install the all dependencies in which is required in this project them.
 ## ***npm start***
 
 Runs the app in the development mode.
