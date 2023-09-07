@@ -1,4 +1,3 @@
-body{margin-top:20px; }
 
 .chat-online {
     color: #34ce57
@@ -11,7 +10,7 @@ body{margin-top:20px; }
 .chat-messages {
     display: flex;
     flex-direction: column;
-    max-height: 800px;
+    max-height: 450px;
     overflow-y: scroll
 }
 
@@ -48,6 +47,7 @@ body{margin-top:20px; }
     display: flex;
     justify-content: space-between;
 }
+
 .file{
     display: none;
 } 
@@ -57,4 +57,33 @@ body{margin-top:20px; }
 }
 .button{
     margin: 5px;
+}
+
+.message-features{
+    /* border:1px solid red; */
+    display:flex;
+    justify-content:center;
+    align-items:center;
+  }
+.send{
+    margin: 5px;
+    padding-left: 18px;
+    padding-right: 18px;
+    padding-bottom: 10px;
+}
+
+.emoji{
+    background-color: transparent;
+    border: none;
+}
+.emoji i{
+    font-size: 35px;
+}
+
+.badge{
+    margin-left: 9rem;
+}
+
+.small{
+    margin-top: 2px;
 }
